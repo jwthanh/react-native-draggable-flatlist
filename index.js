@@ -67,11 +67,6 @@ class SortableFlatList extends Component {
         const tappedRow = this._pixels[Math.floor(this._scrollOffset + tappedPixel)]
         if (tappedRow === undefined) return false
         this._additionalOffset = (tappedPixel + this._scrollOffset) - this._measurements[tappedRow][horizontal ? 'x' : 'y']
-        if (this.props.scrollingContainerOffset !== undefined) {
-          this._offset.setValue((this._additionalOffset + this._containerOffset - this.props.scrollingContainerOffset - this._androidStatusBarOffset) * -1)
-        } else {
-          this._offset.setValue((this._additionalOffset + this._containerOffset - this._androidStatusBarOffset) * -1)
-        }
         if (this._releaseAnim) {
           return false
         }
@@ -90,7 +85,11 @@ class SortableFlatList extends Component {
 
           this._androidStatusBarOffset = (isTranslucent || isHidden) ? StatusBar.currentHeight : 0
         }
-        this._offset.setValue((this._additionalOffset + this._containerOffset - this._androidStatusBarOffset) * -1)
+        if (this.props.scrollingContainerOffset !== undefined) {
+          this._offset.setValue((this._additionalOffset + this._containerOffset - this.props.scrollingContainerOffset - this._androidStatusBarOffset) * -1)
+        } else {
+          this._offset.setValue((this._additionalOffset + this._containerOffset - this._androidStatusBarOffset) * -1)
+        }
         return false
       },
       onMoveShouldSetPanResponder: (evt, gestureState) => {
